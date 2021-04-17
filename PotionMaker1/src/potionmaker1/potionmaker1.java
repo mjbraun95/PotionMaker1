@@ -23,9 +23,11 @@ public class fletcher extends Script {
 //    public String bowType;
 //    public RS2Object banker;
     public Bank bank;
+    public GrandExchange exchange;
     public String ingredientType = "Eye of newt";
     public String unfPotionType = "Guam potion (unf)";
-    public char fletchNum = '4';
+    public String constantItem1 = "Vial of water";
+    public char herbloreNum = '4';
 //    public void getInv() {
 //        inv = getInventory();
 //    }
@@ -37,6 +39,18 @@ public class fletcher extends Script {
                 return false;
             }
         }.sleep();
+    }
+
+    public void buy(String item, String quantity) {
+        exchange = getGrandExchange();
+        exchange.buyItem(200, item, 20, 100);
+        sleep(random(700,1300));
+        
+        do {
+            sleep(random(700,1300));
+        } 
+        while (grandExchange.getStatus(GrandExchange.Box.BOX_1) == GrandExchange.Status.PENDING_BUY);
+        grandExchange.collect();
     }
 
     @Override
@@ -129,15 +143,18 @@ public class fletcher extends Script {
 
 //		banker.interact("Bank");
         bank = getBank();
+        if !bank.contains(constantItem1) {
+
+        }
         bank.open();
         sleep(random(789,972));
         bank.depositAll();
         sleep(random(223,369));
-        bank.withdraw("Knife", 1);
-        bank.withdraw(ingredientType, 27);
+        bank.withdraw(constantItem1, 14);
+        bank.withdraw(ingredientType, 14);
         sleep(random(789,972));
         bank.close();
-        if (!getInventory().contains(ingredientType) || !getInventory().contains("Knife")) {
+        if (!getInventory().contains(ingredientType) || !getInventory().contains("Vial of water")) {
             log("did not successfully withdraw. Exiting");
 //            System.exit(1);
         }
@@ -156,7 +173,7 @@ public class fletcher extends Script {
 //        else {
 //            log("Inventory not empty");
 //        }
-        getInventory().getItem("Knife").interact("Use");;
+        getInventory().getItem("Vial of water").interact("Use");;
         sleep(random(223,369));
         getInventory().getItem(ingredientType).interact();
         sleep(random(1254,1391));
@@ -168,7 +185,7 @@ public class fletcher extends Script {
 //            }
 //        }.sleep();
 
-        keyboard.typeKey(fletchNum);
+        keyboard.typeKey(herbloreNum);
 
         sleep(random(1254,1391));
         new ConditionalSleep(49000) {
